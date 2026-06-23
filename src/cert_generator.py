@@ -1,14 +1,19 @@
 import os
 import datetime
 import ipaddress
+import sys
 from cryptography import x509
 from cryptography.x509.oid import NameOID
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.primitives import serialization
 
-# Definir rutas por defecto en la raíz del proyecto
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Definir rutas por defecto en la raíz del proyecto o directorio del ejecutable
+if getattr(sys, 'frozen', False):
+    PROJECT_ROOT = os.path.dirname(sys.executable)
+else:
+    PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 DEFAULT_CERT = os.path.join(PROJECT_ROOT, "server.crt")
 DEFAULT_KEY = os.path.join(PROJECT_ROOT, "server.key")
 

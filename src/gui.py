@@ -269,7 +269,7 @@ class DashboardFrame(ctk.CTkFrame):
         # Lista scrollable de dominios
         self.domains_list_frame = ctk.CTkScrollableFrame(
             self, 
-            height=200, 
+            height=120, 
             fg_color="#1b1b1b",
             border_width=1,
             border_color="#2d2d2d"
@@ -278,6 +278,33 @@ class DashboardFrame(ctk.CTkFrame):
         
         # Rellenar lista de dominios al inicializar
         self.populate_domains_list()
+        
+        # Sección 3: Mensaje de Bloqueo Personalizado
+        ctk.CTkLabel(self, text="Mensaje de Bloqueo Personalizado", font=ctk.CTkFont(family="Inter", size=14, weight="bold"), anchor="w").pack(fill="x", pady=(5, 5))
+        
+        custom_msg_frame = ctk.CTkFrame(self, fg_color="transparent")
+        custom_msg_frame.pack(fill="x", pady=(0, 10))
+        
+        self.custom_msg_entry = ctk.CTkEntry(
+            custom_msg_frame, 
+            placeholder_text="ej: ¡Hora de estudiar! Este sitio está bloqueado.", 
+            height=35
+        )
+        self.custom_msg_entry.pack(side="left", fill="x", expand=True, padx=(0, 10))
+        self.custom_msg_entry.insert(0, self.config.get("custom_message", "Este sitio ha sido bloqueado temporalmente por tu filtro de enfoque para ayudarte a mantener la concentración."))
+        
+        save_msg_btn = ctk.CTkButton(
+            custom_msg_frame, 
+            text="Guardar", 
+            command=self.save_custom_message,
+            width=90,
+            height=35,
+            font=ctk.CTkFont(family="Inter", size=13, weight="bold")
+        )
+        save_msg_btn.pack(side="right")
+        
+        self.msg_status_label = ctk.CTkLabel(self, text="", text_color="#22c55e", font=ctk.CTkFont(family="Inter", size=11))
+        self.msg_status_label.pack(pady=(0, 5))
         
         # Barra de estado inferior
         status_container = ctk.CTkFrame(self, fg_color="#202020", height=40, corner_radius=8)
@@ -312,6 +339,15 @@ class DashboardFrame(ctk.CTkFrame):
         config_manager.save_config(self.config)
         self.time_error_label.configure(text="¡Horario guardado correctamente!", text_color="#22c55e")
         self.after(2000, lambda: self.time_error_label.configure(text=""))
+        
+    def save_custom_message(self):
+        message = self.custom_msg_entry.get().strip()
+        if not message:
+            message = "Este sitio ha sido bloqueado temporalmente por tu filtro de enfoque para ayudarte a mantener la concentración."
+        self.config["custom_message"] = message
+        config_manager.save_config(self.config)
+        self.msg_status_label.configure(text="¡Mensaje guardado correctamente!", text_color="#22c55e")
+        self.after(2000, lambda: self.msg_status_label.configure(text=""))
         
     def add_domain(self):
         domain = self.domain_entry.get().strip().lower()

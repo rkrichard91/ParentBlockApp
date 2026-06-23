@@ -1,7 +1,11 @@
 import os
 import json
+import sys
 
-CONFIG_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config.json")
+if getattr(sys, 'frozen', False):
+    CONFIG_FILE = os.path.join(os.path.dirname(sys.executable), "config.json")
+else:
+    CONFIG_FILE = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "config.json")
 
 DEFAULT_CONFIG = {
     "username": "",
@@ -10,7 +14,8 @@ DEFAULT_CONFIG = {
     "domains": [],
     "start_time": "08:00",
     "end_time": "17:00",
-    "active": False
+    "active": False,
+    "custom_message": "Este sitio ha sido bloqueado temporalmente por tu filtro de enfoque para ayudarte a mantener la concentración."
 }
 
 def load_config():

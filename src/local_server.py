@@ -1,11 +1,16 @@
 import os
 import ssl
 import threading
+import sys
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from src import cert_generator
+from src import cert_generator, config_manager
 
 # Ruta a la plantilla bloqueado.html
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if getattr(sys, 'frozen', False):
+    PROJECT_ROOT = sys._MEIPASS
+else:
+    PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    
 HTML_TEMPLATE_PATH = os.path.join(PROJECT_ROOT, "templates", "bloqueado.html")
 
 class BlockedHandler(BaseHTTPRequestHandler):
@@ -18,14 +23,18 @@ class BlockedHandler(BaseHTTPRequestHandler):
     def handle_http_request(self):
         """Envía el archivo bloqueado.html al cliente."""
         try:
+            config = config_manager.load_config()
+            custom_message = config.get("custom_message", "Este sitio ha sido bloqueado temporalmente por tu filtro de enfoque para ayudarte a mantener la concentración.")
+            
             if os.path.exists(HTML_TEMPLATE_PATH):
                 with open(HTML_TEMPLATE_PATH, "r", encoding="utf-8") as f:
                     html_content = f.read()
+                html_content = html_content.replace("{{CUSTOM_MESSAGE}}", custom_message)
             else:
                 html_content = (
                     "<!DOCTYPE html><html><head><meta charset='utf-8'></head>"
                     "<body><h1>Sitio Bloqueado</h1>"
-                    "<p>Tu filtro parental está activo. Regresa a trabajar.</p></body></html>"
+                    f"<p>{custom_message}</p></body></html>"
                 )
                 
             self.send_response(200)
