@@ -437,7 +437,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("Control de Enfoque - Bloqueo Parental")
-        self.geometry("480x620")
+        self.geometry("480x680")
         self.resizable(False, False)
         
         # Configurar icono de la ventana
