@@ -27,6 +27,17 @@ class InstallerApp(ctk.CTk):
         self.geometry("460x320")
         self.resizable(False, False)
         
+        # Configurar icono de la ventana
+        try:
+            if getattr(sys, 'frozen', False):
+                icon_path = os.path.join(sys._MEIPASS, "ico.ico")
+            else:
+                icon_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ico.ico")
+            if os.path.exists(icon_path):
+                self.iconbitmap(icon_path)
+        except Exception as e:
+            print(f"[Installer] No se pudo cargar el icono de la ventana: {e}")
+            
         # Centrar la ventana
         self.eval('tk::PlaceWindow . center')
         

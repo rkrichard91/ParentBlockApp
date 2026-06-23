@@ -1,3 +1,5 @@
+import os
+import sys
 import re
 import customtkinter as ctk
 from src import auth, config_manager, scheduler
@@ -437,6 +439,17 @@ class App(ctk.CTk):
         self.title("Control de Enfoque - Bloqueo Parental")
         self.geometry("480x620")
         self.resizable(False, False)
+        
+        # Configurar icono de la ventana
+        try:
+            if getattr(sys, 'frozen', False):
+                icon_path = os.path.join(sys._MEIPASS, "ico.ico")
+            else:
+                icon_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "ico.ico")
+            if os.path.exists(icon_path):
+                self.iconbitmap(icon_path)
+        except Exception as e:
+            print(f"[GUI] No se pudo cargar el icono de la ventana: {e}")
         
         # Inicializar el scheduler de bloqueo en segundo plano
         self.scheduler = scheduler.BlockingScheduler()

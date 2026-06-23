@@ -5,7 +5,7 @@ a = Analysis(
     ['installer.py'],
     pathex=[],
     binaries=[],
-    datas=[('C:\\Users\\richa\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\customtkinter', 'customtkinter/'), ('dist/FiltroEnfoque.exe', '.')],
+    datas=[('C:\\Users\\richa\\AppData\\Local\\Programs\\Python\\Python311\\Lib\\site-packages\\customtkinter', 'customtkinter/'), ('dist/FiltroEnfoque.exe', '.'), ('ico.ico', '.')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
@@ -35,4 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
+    icon=['ico.ico'],
 )
